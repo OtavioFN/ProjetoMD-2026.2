@@ -18,56 +18,88 @@ Este projeto implementa um sistema de criptografia RSA, utilizando uma interface
 ## Tecnologias Utilizadas
 
 - **Node.js** e **Express**: Para criação da API e comunicação com o código C.
-- **GMP (GNU Multiple Precision Arithmetic Library)**: Biblioteca em C para manipulação de números grandes usados na criptografia RSA.
+- **GMP (GNU Multiple Precision Arithmetic Library)**: Biblioteca em C para manipulação de números grandes usados na criptografia RSA (necessária apenas para recompilar o `RSA.c`).
 
 ## Instalação
 
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org) (versão 14 ou superior).
-- [GMP Library](https://gmplib.org) A biblioteca GMP é necessária para manipulação de números grandes e precisa estar instalada no sistema antes da compilação do código em C.
+- Windows: o executável **RSA.exe** já vem compilado na pasta `Projeto/backend`, então **não é necessário compilar nada** para rodar o projeto.
 
-### Passos para Instalação
+### Como rodar (Windows)
 
-1. Clone o repositório ou baixe a última versão do código-fonte em releases:
- https://github.com/jwaozera/Projeto-MD-2024/releases
+1. Baixe o projeto (ou clone o repositório):
    ```bash
-   git clone https://github.com/jwaozera/Projeto-MD-2024.git
-   cd Projeto-MD-2024
-3. Após baixar e instalar o node.js instale o express
+   git clone https://github.com/OtavioFN/ProjetoMD-2026.2.git
+   cd ProjetoMD-2026.2
+   ```
+
+2. Entre na pasta do backend:
+   ```bash
+   cd Projeto/backend
+   ```
+
+3. Instale a dependência do servidor (Express):
    ```bash
    npm install express
+   ```
 
-4. Compile o código em C (CERTIFIQUE-SE DE TER BAIXADO E INSTALADO ANTERIORMENTE O GMP)
+4. Inicie o servidor:
    ```bash
-   gcc backend/RSA.c -o backend/RSA -lgmp
+   node api.js
+   ```
 
-5. Inicie o servidor.
-   ```bash
-   node backend/api.js
+5. Abra no navegador: **http://localhost:3001**
 
-6. O servidor estará disponível em http://localhost:3001
+O próprio servidor entrega o frontend, então não é preciso abrir os arquivos HTML manualmente.
+
+### Linux, macOS ou se o RSA.exe não funcionar (opcional)
+
+O `RSA.exe` só roda no Windows. Em outros sistemas (ou se aparecer erro de DLL), é preciso compilar o `RSA.c`, o que exige o compilador GCC e a biblioteca [GMP](https://gmplib.org):
+
+```bash
+# Linux (Debian/Ubuntu)
+sudo apt install build-essential libgmp-dev
+
+# macOS
+brew install gmp
+```
+
+Depois, dentro de `Projeto/backend`:
+
+```bash
+gcc RSA.c -o RSA -lgmp
+npm install express
+node api.js
+```
+
+No Windows, a alternativa é usar o [MSYS2](https://www.msys2.org) (terminal MinGW64) com `pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-gmp`.
 
 ## ERROS COMUNS
 
-1. ```bash
-   npm : O arquivo C:\Program Files\nodejs\npm.ps1 não pode ser carregado porque a execução de scripts foi desabilitada neste sistema. 
-2. Altere a Política de Execução
-Para permitir a execução de scripts, use o seguinte comando:
-   ```bash
+1. **O PowerShell bloqueia o npm** com a mensagem:
+   ```
+   npm : O arquivo C:\Program Files\nodejs\npm.ps1 não pode ser carregado porque a execução de scripts foi desabilitada neste sistema.
+   ```
+   Para permitir a execução de scripts locais, rode:
+   ```powershell
    Set-ExecutionPolicy RemoteSigned
-RemoteSigned: Permite a execução de scripts locais.
+   ```
+   (ou use o CMD em vez do PowerShell).
+
+2. **Porta 3001 em uso**: feche o outro processo ou altere a constante `PORT` no final do `api.js`.
 
 ## OBSERVAÇÕES
 
-É importante manter as pastas backend e frontend dentro de uma pasta principal do projeto. O arquivo executável **RSA.exe** e o **api.js** devem permanecer na pasta backend, e os arquivos HTML devem ficar na pasta frontend. Caso contrário, será necessário fazer ajustes nas referências de caminho no código.
+É importante manter as pastas backend e frontend dentro de uma pasta principal do projeto. O executável (**RSA.exe** no Windows, **RSA** em Linux/macOS) e o **api.js** devem permanecer na pasta backend, e os arquivos HTML devem ficar na pasta frontend. Caso contrário, será necessário fazer ajustes nas referências de caminho no código.
 ![image](https://github.com/user-attachments/assets/a9cbbc78-b64e-4382-a2b7-b3ce9926b28c)
 
 ## TESTES E USO
 
-Se o objetivo for apenas realizar testes, você pode baixar o executável pré-compilado disponível em releases ou clonar o repositório que já inclui o código compilado do RSA.c. No entanto, é necessário garantir que os pré-requisitos, como a biblioteca GMP, o Node.js e a dependência express, estejam corretamente instalados.
+Para apenas testar, basta seguir a seção "Como rodar (Windows)": o repositório já inclui o `RSA.exe` pré-compilado, e só é necessário ter o Node.js e instalar o `express`.
 
-
+Dica para testar: use primos pequenos, como `61` e `53` com expoente `17`. A mensagem `A` deve gerar `2790`.
 
 ## LIMITAÇÕES DO MÉTODO DE CRIPTOGRAFIA RSA
 
